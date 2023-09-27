@@ -1,4 +1,4 @@
-export default (app, express) => {
+module.exports = (app, express) => {
     const fs = require('fs');
     const files = fs.readdirSync('./router');
     const filteredFiles = files.filter(e => e.indexOf('index.js') === -1);

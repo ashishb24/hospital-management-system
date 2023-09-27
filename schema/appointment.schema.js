@@ -1,8 +1,8 @@
-import { Schema, model } from 'mongoose';
+const mongoose = require('mongoose');
 
-const appointmentSchema = new Schema({
+const appointmentSchema = new mongoose.Schema({
     user: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "USER"
     },
     bookingId: {
@@ -10,7 +10,7 @@ const appointmentSchema = new Schema({
         require: true
     },
     doctorId: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "DOCTOR"
     },
     start: {
@@ -55,4 +55,4 @@ const appointmentSchema = new Schema({
     }
 );
 
-export default model('APPOINTMENT', appointmentSchema);
+module.exports = mongoose.model('APPOINTMENT', appointmentSchema);

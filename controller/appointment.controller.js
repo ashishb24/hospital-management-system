@@ -1,15 +1,14 @@
-import { findOne, aggregate, find, findByIdAndUpdate } from '../../schema/appointment.schema';
-import { findOne as _findOne } from '../../schema/doctors.schema';
-import { mailer, mail_schedule } from '../../utils/mail';
-import { status, message } from '../validator/utils';
-import { getResponseStructure } from '../../constants/response.structure';
-import { appointmentId, hour } from "../../utils/utils";
-import { create, schedule } from "../../helper/template.helper";
-import { create as _create } from '../../database/appointment.db';
-import { Types } from "mongoose";
-const ObjectId = Types.ObjectId;
+let appointmentSchema = require('../schema/appointment.schema');
+let doctorSchema = require('../schema/doctors.schema');
+let { mailer, mail_schedule } = require('../utils/mail');
+let { status, message } = require('../validator/utils');
+let { getResponseStructure } = require('../constants/response.structure');
+let { appointmentId, hour } = require("../utils/utils");
+let template = require("../helper/template.helper");
+let db = require('../database/appointment.db')
 
-export async function create(req, res) {
+
+exports.create = async (req, res) => {
     try {
         const data = {
             user: req.user._id,
@@ -21,11 +20,11 @@ export async function create(req, res) {
             doctorId: req.body.doctorId,
         }
         // Checking user in new or not if user already booked appointment isNewPatient wil be false.
-        const user = await findOne({ user: data['user'] });
+        const user = await appointmentSchema.findOne({ user: data['user'] });
         if (user) {
             data.isNewPatient = false;
         }
-        const doctor = await _findOne({ _id: data['doctorId'] });
+        const doctor = await doctorSchema.findOne({ _id: data['doctorId'] });
         if (!doctor) {
             return res
                 .status(status.success)
@@ -58,14 +57,14 @@ export async function create(req, res) {
                 .status(status.badRequest)
                 .send(getResponseStructure(status.badRequest, message.availableTimeSlot));
         }
-        const slot = await findOne({ appointmentDate: data["appointmentDate"], start: data["start"] });
+        const slot = await appointmentSchema.findOne({ appointmentDate: data["appointmentDate"], start: data["start"] });
         // checking slots are available or not.
         if (slot) {
             return res
                 .status(status.badRequest)
                 .send(getResponseStructure(status.badRequest, message.alreadyBooked));
         }
-        const findUser = await aggregate([{ $match: { user: data["user"], appointmentDate: data["appointmentDate"] } }]);
+        const findUser = await appointmentSchema.aggregate([{ $match: { user: data["user"], appointmentDate: data["appointmentDate"] } }]);
         // checking the user has no appointment on the given date.
         // todo : user can only book one appointment on a single day. 
         if (findUser["length"] > 0) {
@@ -74,15 +73,15 @@ export async function create(req, res) {
                 .send(getResponseStructure(status.badRequest, message.userAlreadyBooked));
         }
         // creating email and email_schedule templates for sending user.
-        const createTemplate = create(req.user.name.toUpperCase(), data["bookingId"], data["appointmentDate"], data["start"], data['end'], doctor['name']);
+        const createTemplate = template.create(req.user.name.toUpperCase(), data["bookingId"], data["appointmentDate"], data["start"], data['end'], doctor['name']);
         await mailer(req.user.email, "Appointment Confirmation Latter", createTemplate);
         if (data['isOnline'] === true) {
             data.meet_link = "https://meet.google.com/fky-wofh-hfa";
-            const templateSchedule = schedule(req.user.name.toUpperCase(), data["meet_link"])
+            const templateSchedule = template.schedule(req.user.name.toUpperCase(), data["meet_link"])
             await mail_schedule(req.user.email, "Meeting Remainder!", templateSchedule, 15, hour(data["start"]), data["appointmentDate"].getDate(), data["appointmentDate"].getMonth() + 1)
         }
         // if the all condition is fulfilled then  the  appointment will successfully add in a system.
-        await _create(data)
+        await db.create(data)
             .then(() => {
                 return res
                     .status(status.successCreated)
@@ -98,37 +97,11 @@ export async function create(req, res) {
             .status(status.success)
             .send(getResponseStructure(status.notfound, error.toString()));
     }
-}
+};
 
-export async function getUserAllAppointment(req, res) {
+exports.getUserAllAppointment = async (req, res) => {
     try {
-        // const appointment = await appointmentSchema.find({ user: req.user._id },
-        //     {
-        //         bookingId: 1,
-        //         start: 1,
-        //         end: 1,
-        //         appointmentDate: 1,
-        //         doctorId: 1,
-        //     }
-        // );
-        const appointment = await aggregate([
-            {
-                $match: {
-                    user: ObjectId(req.user._id),
-                    isCancelled: false
-                }
-            },
-            {
-                $lookup:
-                {
-                    from: "doctors",
-                    localField: "doctorId",
-                    foreignField: "_id",
-                    as: "inventory_docs"
-                }
-            }
-        ]);
-        console.log(appointment);
+        const appointment = await appointmentSchema.find({ user: req.user._id });
         if (!appointment) {
             return res
                 .status(status.success)
@@ -142,11 +115,11 @@ export async function getUserAllAppointment(req, res) {
             .status(status.success)
             .send(getResponseStructure(status.notfound, error.toString()));
     }
-}
+};
 
-export async function previousAppointment(req, res) {
+exports.previousAppointment = async (req, res) => {
     try {
-        const appointment = await find({ user: req.user._id, appointmentDate: { $lt: new Date() } },
+        const appointment = await appointmentSchema.find({ user: req.user._id, appointmentDate: { $lt: new Date() } },
             {
                 user: 1,
                 appointmentDate: 1,
@@ -168,11 +141,11 @@ export async function previousAppointment(req, res) {
             .status(status.success)
             .send(getResponseStructure(status.notfound, error.toString()));
     }
-}
+};
 
-export async function futureAppointment(req, res) {
+exports.futureAppointment = async (req, res) => {
     try {
-        const appointment = await find({ user: req.user._id, appointmentDate: { $gt: new Date() } },
+        const appointment = await appointmentSchema.find({ user: req.user._id, appointmentDate: { $gt: new Date() } },
             {
                 user: 1,
                 appointmentDate: 1,
@@ -194,11 +167,11 @@ export async function futureAppointment(req, res) {
             .status(status.success)
             .send(getResponseStructure(status.notfound, error.toString()));
     }
-}
+};
 
-export async function cancelAppointment(req, res) {
+exports.cancelAppointment = async (req, res) => {
     try {
-        const appointment = await find({ _id: req.query.id, user: req.user._id, appointmentDate: { $gt: new Date() } },
+        const appointment = await appointmentSchema.find({ _id: req.query.id, user: req.user._id, appointmentDate: { $gt: new Date() } },
             {
                 user: 1,
                 appointmentDate: 1,
@@ -215,7 +188,7 @@ export async function cancelAppointment(req, res) {
                 .status(status.success)
                 .send(getResponseStructure(status.notfound, "Appointment" + message.notFound))
         }
-        await findByIdAndUpdate({ _id: appointment[0]['_id'] }, { updatedAt: new Date(), isCancelled: true, meet_link: null })
+        await appointmentSchema.findByIdAndUpdate({ _id: appointment[0]['_id'] }, { updatedAt: new Date(), isCancelled: true, meet_link: null })
             .then(async () => {
                 return res
                     .status(status.success)
@@ -231,12 +204,12 @@ export async function cancelAppointment(req, res) {
             .status(status.success)
             .send(getResponseStructure(status.notfound, error.toString()));
     }
-}
+};
 
-export async function update(req, res) {
+exports.update = async (req, res) => {
     try {
         // Find Appointment By their ID
-        const appointment = await findOne({ _id: req.body.id });
+        const appointment = await appointmentSchema.findOne({ _id: req.body.id });
         if (!appointment) {
             return res
                 .status(status.success)
@@ -261,14 +234,14 @@ export async function update(req, res) {
                 .status(status.badRequest)
                 .send(getResponseStructure(status.badRequest, message.isHoliday))
         }
-        const slot = await findOne({ appointmentDate: req.body.date, start: req.body.time })
+        const slot = await appointmentSchema.findOne({ appointmentDate: req.body.date, start: req.body.time })
         // checking the provided user time and date slots are not booked already
         if (slot) {
             return res
                 .status(status.badRequest)
                 .send(getResponseStructure(status.badRequest, message.alreadyBooked))
         }
-        const findUser = await aggregate([{ $match: { user: appointment["user"], appointmentDate: req.body.date, start: req.body.time } }]);
+        const findUser = await appointmentSchema.aggregate([{ $match: { user: appointment["user"], appointmentDate: req.body.date, start: req.body.time } }]);
         // finding user if he already booked an appointment on that date.
         if (findUser["length"] > 0) {
             return res
@@ -276,7 +249,7 @@ export async function update(req, res) {
                 .send(getResponseStructure(status.badRequest, message.userAlreadyBooked))
         }
         // And finally Update the Appointment Collection including the updated At field.
-        await findByIdAndUpdate({ _id: appointment["_id"] }, { updatedAt: new Date(), appointmentDate: req.body.date, start: req.body.time });
+        await appointmentSchema.findByIdAndUpdate({ _id: appointment["_id"] }, { updatedAt: new Date(), appointmentDate: req.body.date, start: req.body.time });
         return res
             .status(status.success)
             .send(getResponseStructure(status.success, "Appointment" + message.updateSuccess));
@@ -285,4 +258,4 @@ export async function update(req, res) {
             .status(status.success)
             .send(getResponseStructure(status.notfound, error.toString()));
     }
-}
+};

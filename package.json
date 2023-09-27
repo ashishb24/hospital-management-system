@@ -1,9 +1,8 @@
 {
-  "private": true,
-  "type": "module",
+  
   "scripts": {
-    "dev": "nodemon index.mjs",
-    "start": "node index.mjs"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "dependencies": {
     "@joi/date": "^2.1.0",
