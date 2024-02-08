@@ -47,8 +47,8 @@
 
 ```json
 {
-  "name": "Mohin",
-  "email": "mohinsheikh2011@gmail.com",
+  "name": "John",
+  "email": "Johndoe2023@gmail.com",
   "password": "user123",
   "confirmPass": "user123",
   "gender": "male",
@@ -84,7 +84,7 @@
 
 ```json
 {
-  "email": "mohinsheikh2011@gmail.com",
+  "email": "Johndoe2023@gmail.com",
   "otp": "030581"
 }
 ```
@@ -114,7 +114,7 @@
 
 ```json
 {
-  "email": "mohinsheikh2011@gmail.com"
+  "email": "Johndoe2023@gmail.com"
 }
 ```
 
@@ -126,7 +126,7 @@
 ```json
 {
   "status": 200,
-  "message": "Registration code has been sent to mohinsheikh2011@gmail.com",
+  "message": "Registration code has been sent to Johndoe2023@gmail.com",
   "response": {}
 }
 ```
@@ -143,7 +143,7 @@
 
 ```json
 {
-  "email": "mohinsheikh2011@gmail.com",
+  "email": "Johndoe2023@gmail.com",
   "otp": "907577",
   "newPassword": "user1234",
   "confirmPassword": "user1234"
@@ -175,7 +175,7 @@
 
 ```json
 {
-  "email": "mohinsheikh2011@gmail.com",
+  "email": "Johndoe2023@gmail.com",
   "password": "user123"
 }
 ```
@@ -188,7 +188,7 @@
 ```json
 {
   "status": 200,
-  "message": "Registration code has been sent to mohinsheikh2011@gmail.com",
+  "message": "Registration code has been sent to Johndoe2023@gmail.com",
   "response": {}
 }
 ```
@@ -205,7 +205,7 @@
 
 ```json
 {
-  "email": "mohinsheikh2011@gmail.com",
+  "email": "Johndoe2023@gmail.com",
   "otp": "069135"
 }
 ```
@@ -237,7 +237,7 @@
 
 ```json
 {
-  "email": "mohinsheikh2011@gmail.com"
+  "email": "Johndoe2023@gmail.com"
 }
 ```
 
@@ -249,7 +249,7 @@
 ```json
 {
   "status": 200,
-  "message": "Registration code has been sent to mohinsheikh2011@gmail.com",
+  "message": "Registration code has been sent to Johndoe2023@gmail.com",
   "response": {}
 }
 ```
@@ -272,8 +272,8 @@
   "message": "Success.",
   "response": {
     "_id": "6313a39960747e504a85af1c",
-    "name": "mohin",
-    "email": "mohinsheikh2011@gmail.com",
+    "name": "John",
+    "email": "Johndoe2023@gmail.com",
     "mobileNumber": "8830186746",
     "gender": "male",
     "role": "user",
@@ -295,7 +295,7 @@
 
 ```json
 {
-  "name": "mohin",
+  "name": "John",
   "dob": "2000-05-25",
   "gender": "male"
 }
@@ -330,7 +330,7 @@
 ```json
 {
   "status": 200,
-  "message": "Verification code has been sent to mohin.s@broadstairs.in",
+  "message": "Verification code has been sent to John.s@broadstairs.in",
   "response": {}
 }
 ```

@@ -1,7 +1,7 @@
-let doctorSchema = require('../../schema/doctors.schema');
-let { status, message } = require('../../validator/utils');
-let { getResponseStructure } = require('../../constants/response.structure');
-let { getAge } = require('../../utils/utils');
+let doctorSchema = require('../schema/doctors.schema');
+let { status, message } = require('../validator/utils');
+let { getResponseStructure } = require('../constants/response.structure');
+let { getAge } = require('../utils/utils');
 
 
 exports.register = async (req, res) => {

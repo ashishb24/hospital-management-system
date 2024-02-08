@@ -1,13 +1,13 @@
 let argon2 = require('argon2');  // For Encrypt And Decrypting password
 let moment = require('moment');
-let userSchema = require('../../schema/user.schema');
-let { getJWTToken } = require('../../security/jwt');
-let template = require('../../utils/template.utils');
-let { mailer } = require('../../utils/mail');
-let { generateOTP, getAge } = require('../../utils/utils');
-let { status, message } = require('../../validator/utils');
-let { getResponseStructure } = require('../../constants/response.structure');
-let mailTemplate = require("../../helper/template.helper");
+let userSchema = require('../schema/user.schema');
+let { getJWTToken } = require('../security/jwt');
+let template = require('../utils/template.utils');
+let { mailer } = require('../utils/mail');
+let { generateOTP, getAge } = require('../utils/utils');
+let { status, message } = require('../validator/utils');
+let { getResponseStructure } = require('../constants/response.structure');
+let mailTemplate = require("../helper/template.helper");
 
 
 exports.createUser = async (req, res) => {
@@ -21,7 +21,9 @@ exports.createUser = async (req, res) => {
             dob: req.body.dob,
             age: getAge(req.body.dob),
             otp: generateOTP(),
+            
             confirmation_code_expiry: moment().add(15, 'minutes').toDate(),
+        
         });
         const findUser = await userSchema.findOne({ $or: [{ email: user.email }, { mobileNumber: user.mobileNumber }] });
         if (findUser) {
@@ -30,7 +32,8 @@ exports.createUser = async (req, res) => {
                 .send(getResponseStructure(status.conflict, "User" + message.alreadyExist));
         }
         const signup = mailTemplate.signup(user.name, user.otp); // generating mail template
-        await mailer(user["email"], "Account Verify", signup); // Sending Mail
+        // await mailer(user["email"], "Account Verify", signup); // Sending Mail
+        console.log(user.otp);
         await user.save()
             .then(() => {
                 return res
@@ -102,7 +105,8 @@ exports.login = async (req, res) => {
             user.confirmation_code_expiry = moment().add(15, 'minutes').toDate();
             await user.save();
             const login = mailTemplate.login(user.name, user.otp);
-            await mailer(user["email"], "Login Code Verify", login);
+            // await mailer(user["email"], "Login Code Verify", login);
+            console.log(user.otp);
             return res
                 .status(status.success)
                 .send(getResponseStructure(status.success, message.codeSent + user.email));
@@ -244,10 +248,12 @@ exports.updateMailAndNumber = async (req, res) => {
                 .send(getResponseStructure(status.notfound, "User" + message.notFound));
         }
         user.otp = generateOTP();
+        
         user.confirmation_code_expiry = moment().add(15, 'minutes').toDate();
         await user.save();
         const update = mailTemplate.update(user.name, user.otp);
-        await mailer(user['email'], "VERIFICATION", update);
+        console.log(user.otp);
+        // await mailer(user['email'], "VERIFICATION", update);
         return res
             .status(status.success)
             .send(getResponseStructure(status.success, message.codeSent + user.email));
@@ -342,8 +348,9 @@ exports.forgotPassword = async (req, res) => {
         user.otp = generateOTP();
         user.confirmation_code_expiry = moment().add(15, 'minutes').toDate();
         await user.save();
+        console.log(user.otp);
         const forgotPass = mailTemplate.forgotPass(user.name, user.otp);
-        await mailer(user["email"], "FORGOT PASSWORD", forgotPass)
+        // await mailer(user["email"], "FORGOT PASSWORD", forgotPass)
         return res
             .status(status.success)
             .send(getResponseStructure(status.success, message.codeSent + user["email"]));
@@ -407,6 +414,7 @@ exports.verifyForgotPassword = async (req, res) => {
 exports.logout = async (req, res) => {
     try {
         res.clearCookie("jwt"); // Token remove
+       console.log("logout Successfully");
         res.redirect("/user/login"); // redirect Login Page.
     } catch (error) {
         return res

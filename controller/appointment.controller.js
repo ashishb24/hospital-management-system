@@ -6,7 +6,8 @@ let { getResponseStructure } = require('../constants/response.structure');
 let { appointmentId, hour } = require("../utils/utils");
 let template = require("../helper/template.helper");
 let db = require('../database/appointment.db')
-
+const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 
 exports.create = async (req, res) => {
     try {
@@ -74,7 +75,7 @@ exports.create = async (req, res) => {
         }
         // creating email and email_schedule templates for sending user.
         const createTemplate = template.create(req.user.name.toUpperCase(), data["bookingId"], data["appointmentDate"], data["start"], data['end'], doctor['name']);
-        await mailer(req.user.email, "Appointment Confirmation Latter", createTemplate);
+        // await mailer(req.user.email, "Appointment Confirmation Latter", createTemplate);
         if (data['isOnline'] === true) {
             data.meet_link = "https://meet.google.com/fky-wofh-hfa";
             const templateSchedule = template.schedule(req.user.name.toUpperCase(), data["meet_link"])
@@ -101,7 +102,33 @@ exports.create = async (req, res) => {
 
 exports.getUserAllAppointment = async (req, res) => {
     try {
-        const appointment = await appointmentSchema.find({ user: req.user._id });
+        // const appointment = await appointmentSchema.find({ user: req.user._id },
+        //     {
+        //         bookingId: 1,
+        //         start: 1,
+        //         end: 1,
+        //         appointmentDate: 1,
+        //         doctorId: 1,
+        //     }
+        // );
+        const appointment = await appointmentSchema.aggregate([
+            {
+                $match: {
+                    user: ObjectId(req.user._id),
+                    isCancelled: false
+                }
+            },
+            {
+                $lookup:
+                {
+                    from: "doctors",
+                    localField: "doctorId",
+                    foreignField: "_id",
+                    as: "inventory_docs"
+                }
+            }
+        ]);
+        console.log(appointment);
         if (!appointment) {
             return res
                 .status(status.success)

@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Ashish\",\r\n    \"email\": \"mohinsheikh2011@gmail.com\",\r\n    \"password\": \"user123\",\r\n    \"confirmPass\": \"user123\",\r\n    \"gender\": \"male\",\r\n    \"mobileNumber\": \"8830186746\",\r\n    \"dob\": \"2000-05-25\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Ashish\",\r\n    \"email\": \"Johndoe2023@gmail.com\",\r\n    \"password\": \"user123\",\r\n    \"confirmPass\": \"user123\",\r\n    \"gender\": \"male\",\r\n    \"mobileNumber\": \"8830186746\",\r\n    \"dob\": \"2000-05-25\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -43,7 +43,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"mohinsheikh2011@gmail.com\",\r\n    \"otp\": \"009951\"\r\n}",
+							"raw": "{\r\n    \"email\": \"Johndoe2023@gmail.com\",\r\n    \"otp\": \"009951\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -74,7 +74,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"mohinsheikh2011@gmail.com\",\r\n    \"password\": \"user123\"\r\n}",
+							"raw": "{\r\n    \"email\": \"Johndoe2023@gmail.com\",\r\n    \"password\": \"user123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -104,7 +104,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"mohinsheikh2011@gmail.com\",\r\n    \"otp\": \"215985\"\r\n}",
+							"raw": "{\r\n    \"email\": \"Johndoe2023@gmail.com\",\r\n    \"otp\": \"215985\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -135,7 +135,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"mohinsheikh2011@gmail.com\"\r\n}",
+							"raw": "{\r\n    \"email\": \"Johndoe2023@gmail.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -200,7 +200,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"mohin\",\r\n    \"dob\": \"2000-05-25\"\r\n}",
+							"raw": "{\r\n    \"name\": \"John\",\r\n    \"dob\": \"2000-05-25\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -323,7 +323,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"mohinsheikh2011@gmail.com\"\r\n}",
+							"raw": "{\r\n    \"email\": \"Johndoe2023@gmail.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -351,7 +351,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"mohin.s@broadstairs.in\",\r\n    \"otp\": \"078139\",\r\n    \"newPassword\": \"user1234\",\r\n    \"confirmPassword\": \"user1234\"\r\n}",
+							"raw": "{\r\n    \"email\": \"John.s@broadstairs.in\",\r\n    \"otp\": \"078139\",\r\n    \"newPassword\": \"user1234\",\r\n    \"confirmPassword\": \"user1234\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
